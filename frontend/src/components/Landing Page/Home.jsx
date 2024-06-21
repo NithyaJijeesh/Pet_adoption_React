@@ -493,7 +493,6 @@ function Home() {
                   </Grid>
                   <Grid item xs={12}>
                     <Box mt={2} textAlign="center">
-                      {/* Use CustomButton instead of Button */}
                       <CustomButton type="submit" text="Send Message" />
                     </Box>
                   </Grid>

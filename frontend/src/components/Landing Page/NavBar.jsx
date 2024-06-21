@@ -196,10 +196,8 @@ const NavBar = () => {
             }}
 
           >
-            {location.pathname !== '/login' && ( 
-              <CustomButton2 text="Login" sx={{ width: '150px' }} onClick={() => navigate('/login')} />
-            )}
-            {location.pathname !== '/registration' && ( 
+            {location.pathname !== '/login' && location.pathname !== '/registration' && ( 
+              <CustomButton2 text="Login" sx={{ width: '150px' }} onClick={() => navigate('/login')} />,
               <CustomButton text="Signup" sx ={{ width : '150px' }} onClick={() => navigate('/registration')} />
             )}
           </Box>
