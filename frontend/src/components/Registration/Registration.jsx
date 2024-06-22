@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import Footer from '../Landing Page/Footer';
 import NavBar from '../Landing Page/NavBar';
-import '../components.css'; 
+import '../components.css';
 import { Box } from '@mui/material';
 import CustomButton from '../Button/CustomButton';
-import '../components.css';
+import CustomButton2 from '../Button/CustomButton2';
 
 function Registration() {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [role, setRole] = useState('buyer');
+  const [role, setRole] = useState('donor');
 
   const handleToggle = () => {
     setIsSignUp(!isSignUp);
@@ -24,7 +24,7 @@ function Registration() {
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
         <section id="auth" className={isSignUp ? 'sign-up' : ''}>
           <form id="sign-up">
-            <h2 mb={5}>Time to feel like home</h2>
+            <h2>Time to feel like home</h2>
             <label>First Name</label>
             <input type="text" />
             <label>Last Name</label>
@@ -35,6 +35,7 @@ function Registration() {
             <input type="password" />
             <label>Confirm Password</label>
             <input type="password" />
+
             <div className="radio-group">
               <label className="radio-label">
                 <input type="radio" value="donor" checked={role === 'donor'} onChange={handleRadioChange} />
@@ -73,12 +74,18 @@ function Registration() {
 
           <div id="slider">
             <div id="login-text">
-              <h1>Good to see you again</h1>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
+              <Box my={2} sx={{ justifyContent: 'center', textAlign: 'center' }}>
+                <h1>Good to see you again</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
+                <CustomButton2 type="button" text="Sign up" onClick={handleToggle}/>
+              </Box>
             </div>
             <div id="sign-up-text">
-              <h1>Welcome to the thing</h1>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
+              <Box my={2} sx={{ justifyContent: 'center', textAlign: 'center' }}>
+                <h1>Welcome to <em>PETIFY</em></h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
+                <CustomButton2 type="button" text="Log in" onClick={handleToggle}/>
+              </Box>
             </div>
           </div>
         </section>

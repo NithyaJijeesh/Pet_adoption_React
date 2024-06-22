@@ -1,66 +1,92 @@
-import * as React from 'react';
-import NavBar from '../Landing Page/NavBar';
+import React, { useState } from 'react';
 import Footer from '../Landing Page/Footer';
-import dogImg1 from '../../assets/dog-image1.jpg';
-import {
-  MDBBtn,
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBInput,
-  MDBIcon,
+import NavBar from '../Landing Page/NavBar';
+import '../components.css'; 
+import { Box } from '@mui/material';
+import CustomButton from '../Button/CustomButton';
+import '../components.css';
 
-} from 'mdb-react-ui-kit';
+function Registration() {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [role, setRole] = useState('buyer');
 
-function Login() {
+  const handleToggle = () => {
+    setIsSignUp(!isSignUp);
+  };
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   const data = new FormData(event.currentTarget);
-  //   console.log({
-  //     email: data.get('email'),
-  //     password: data.get('password'),
-  //   });
-  // };
+  const handleRadioChange = (e) => {
+    setRole(e.target.value);
+  };
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }} className="custom-scrollbar">
       <NavBar />
-      <MDBContainer fluid>
-      <MDBRow>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 , padding : '5rem'}}>
+        <section id="auth" className={isSignUp ? 'sign-up' : ''}>
+          <form id="sign-up">
+            <h2 my={5}>Time to feel like home</h2>
+            <label>First Name</label>
+            <input type="text" />
+            <label>Last Name</label>
+            <input type="text" />
+            <label>Username</label>
+            <input type="text" />
+            <label>Password</label>
+            <input type="password" />
+            <label>Confirm Password</label>
+            <input type="password" />
+            
+            <div className="radio-group">
+              <label className="radio-label">
+                <input type="radio" value="donor" checked={role === 'donor'} onChange={handleRadioChange} />
+                <span></span>
+                Donor
+              </label>
+              <label className="radio-label">
+                <input type="radio" value="buyer" checked={role === 'buyer'} onChange={handleRadioChange} />
+                <span></span>
+                Buyer
+              </label>
+            </div>
+            <Box my={2} sx={{ justifyContent: 'center', textAlign: 'center', marginLeft: '30%' }}>
+              <CustomButton type="submit" text="Sign up" onClick={(e) => e.preventDefault()} />
+            </Box>
+            <div className="toggle">
+              Already have an account?
+              <span onClick={handleToggle} sx={{ color: '#1b2b5d' }}> Log in</span>
+            </div>
+          </form>
 
-        <MDBCol sm='6'>
+          <form id="login">
+            <h2>Welcome back</h2>
+            <label>Username</label>
+            <input type="text" />
+            <label>Password</label>
+            <input type="password" />
+            <Box my={2} sx={{ justifyContent: 'center', textAlign: 'center', marginLeft: '30%' }}>
+              <CustomButton type="submit" text="Log in" onClick={(e) => e.preventDefault()} />
+            </Box>
+            <div className="toggle" justifyContent='center' textAlign='center'>
+              Have you been here before?
+              <span onClick={handleToggle} sx={{ color: '#1b2b5d' }}> Sign up</span>
+            </div>
+          </form>
 
-          <div className='d-flex flex-row ps-5 pt-5'>
-            <MDBIcon fas icon="crow fa-3x me-3" style={{ color: '#709085' }}/>
-            <span className="h1 fw-bold mb-0">Logo</span>
+          <div id="slider">
+            <div id="login-text">
+              <h1>Good to see you again</h1>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
+            </div>
+            <div id="sign-up-text">
+              <h1>Welcome to the thing</h1>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
+            </div>
           </div>
-
-          <div className='d-flex flex-column justify-content-center h-custom-2 w-75 pt-4'>
-
-            <h3 className="fw-normal mb-3 ps-5 pb-3" style={{letterSpacing: '1px'}}>Log in</h3>
-
-            <MDBInput wrapperClass='mb-4 mx-5 w-100' label='Email address' id='formControlLg' type='email' size="lg"/>
-            <MDBInput wrapperClass='mb-4 mx-5 w-100' label='Password' id='formControlLg' type='password' size="lg"/>
-
-            <MDBBtn className="mb-4 px-5 mx-5 w-100" color='info' size='lg'>Login</MDBBtn>
-            <p className="small mb-5 pb-lg-3 ms-5"><a class="text-muted" href="#!">Forgot password?</a></p>
-            <p className='ms-5'>Don't have an account? <a href="#!" class="link-info">Register here</a></p>
-
-          </div>
-
-        </MDBCol>
-
-        <MDBCol sm='6' className='d-none d-sm-block px-0'>
-          <img src={dogImg1} alt="Login image" className="w-100" style={{objectFit: 'cover', objectPosition: 'left'}} />
-        </MDBCol>
-
-      </MDBRow>
-
-    </MDBContainer>
+        </section>
+      </Box>
       <Footer />
-    </>
+    </div>
   );
 }
 
-export default Login;
+export default Registration;
