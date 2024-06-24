@@ -15,6 +15,7 @@ import pawImage from '../../assets/paw.png';
 import dogImg1 from '../../assets/indian-pariah-dog-1.jpeg';
 import dogImg2 from '../../assets/indian-pariah-dog-2.jpg';
 import dogImg3 from '../../assets/Indianspitz.jpg';
+import dogImg4 from '../../assets/beagle.jpeg';
 import birdImg1 from '../../assets/bird5.jpg';
 import catImg1 from '../../assets/cat1.jpg';
 import catImg3 from '../../assets/cat3.jpeg';
@@ -33,11 +34,9 @@ function Home() {
   const [isVisible, setIsVisible] = useState(false);
   const aboutImageRef1 = useRef(null);
   const aboutImageRef2 = useRef(null);
-  // const [isAboutImageVisible1, setIsAboutImageVisible1] = useState(false);
-  // const [isAboutImageVisible2, setIsAboutImageVisible2] = useState(false);
 
   const imageData = [
-    { src: dogImg1, alt: "Beagle", category: 'Dog', title: "Pogo", breed: "Beagle" },
+    { src: dogImg4, alt: "Beagle", category: 'Dog', title: "Pogo", breed: "Beagle" },
     { src: birdImg1, alt: "Bird", category: "Bird", title: "Dooby", breed: "Parrot" },
     { src: catImg1, alt: "Cat",category: "Cat",  title: "Oreo", breed: "" },
     { src: rabbitImg3, alt: "Rabbit", category: "Rabbit", title: "Snowie", breed: "" },
@@ -71,30 +70,6 @@ function Home() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   const aboutObserver1 = new IntersectionObserver(
-  //     (entries) => {
-  //       entries.forEach((entry) => {
-  //         if (entry.isIntersecting) {
-  //           setIsAboutImageVisible1(true);
-  //           aboutObserver1.disconnect();
-  //         }
-  //       });
-  //     },
-  //     { threshold: 0.1 }
-  //   );
-
-  //   if (aboutImageRef1.current) {
-  //     aboutObserver1.observe(aboutImageRef1.current);
-  //   }
-
-  //   return () => {
-  //     if (aboutImageRef1.current) {
-  //       aboutObserver1.unobserve(aboutImageRef1.current);
-  //     }
-  //   };
-  // }, []);
-
   
 
   return (
@@ -103,10 +78,10 @@ function Home() {
       <HeroSection />
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
         <Grid container alignItems="center" justifyContent="center" sx={{ marginTop: '-3rem', width: '80%' }}>
-          <Grid item xs={12} sm={6} md={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '-3rem', padding: '0.9rem' }}>
+          <Grid item xs={12} sm={6} md={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center',  padding: '0.9rem' }}>
             <ClickableCard title="DOG" image={dogImage} alt="Dog Image" />
           </Grid>
-          <Grid item xs={12} sm={6} md={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '-3rem', padding: '0.9rem' }}>
+          <Grid item xs={12} sm={6} md={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center',  padding: '0.9rem' }}>
             <ClickableCard title="CAT" image={catImage} alt="Cat Image" />
           </Grid>
           <Grid item xs={12} sm={6} md={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0.9rem' }}>
@@ -325,7 +300,6 @@ function Home() {
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3rem' }}>
             <Box
               ref={aboutImageRef1}
-              // className={`box-animate ${isAboutImageVisible1 ? 'box-animate-visible' : ''}`}
               sx={{
                 display: 'flex',
                 flexDirection: { xs: 'column', md: 'row' },
@@ -492,7 +466,7 @@ function Home() {
                     </Grid>
                   </Grid>
                   <Grid item xs={12}>
-                    <Box mt={2} textAlign="center">
+                    <Box my={5} sx={{ justifyContent: 'center', textAlign: 'center', marginLeft: '40%' }}>
                       <CustomButton type="submit" text="Send Message" />
                     </Box>
                   </Grid>

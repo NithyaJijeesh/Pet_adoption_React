@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import '../components.css';
 
-const CustomButton = ({ text, sx }) => {
+const CustomButton = ({ text,  onClick, sx }) => {
   return (
     <Button 
       variant="contained" 
@@ -21,6 +21,7 @@ const CustomButton = ({ text, sx }) => {
         },
         ...sx
       }}
+      onClick={onClick}
     >
       {text}
     </Button>

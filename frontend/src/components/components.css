@@ -22,7 +22,9 @@ body {
   color: seashell;
  }
 
-
+ body{
+  background-color: #fdfcfc;
+ }
 .home-background {
   background-color: #fdfcfc;
   background-size: cover; 
@@ -452,14 +454,23 @@ input.form-btn:hover {
 
 @import url("https://fonts.googleapis.com/css?family=Quattrocento+Sans&display=swap");
 
-#auth {
-  width: 100vw;
-  height: 100%;
+#log-reg {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 5rem;
   
-}
 
+}
+#auth {
+  width: 60vw;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: 30px;
+}
 
 #auth.sign-up #slider {
   left: 50vw;
@@ -467,44 +478,59 @@ input.form-btn:hover {
 
 #auth form {
   flex: 0 0 50%;
-  padding: 10vh 10vw;
+  padding: 5vh 10vw;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* background-color: rgb(241, 239, 237); */
-  background-color: blue;
+  /* background-color: hsla(225, 55%, 24%, 0.071); */
+  background-color: rgb(255, 246, 240, 1);
+  border-radius: 30px;
+  box-shadow: 0 6px 20px 10px rgba(black, 0.2);
   
+
 }
 
 #auth label {
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  font-weight: 900;
+  margin-left: 0;
+  color: #1b2b5d;
+  font-family: cursive;
+}
+#auth h2{
+  font-family: cursive;
+  font-weight: bolder;
+  margin-bottom: 4rem;
 }
 
-#auth button, 
+#auth button,
 #auth #sign-up input,
-#auth #login input {
-  
+#auth #sign-up textarea,
+#auth #login input, 
+#auth #login textarea {
   margin-bottom: 15px;
   font-size: 1.25rem;
-  }
+}
 
 #auth #sign-up input,
-#auth #login input {
+#auth #sign-up textarea,
+#auth #login input, 
+#auth #login textarea {
   padding: 10px;
   transition: 125ms ease;
   display: block;
   width: 100%;
   margin-top: 5px;
   padding-bottom: 5px;
-  font-size: 16px;
+  font-size: 20px;
   text-align: center;
-  color: #1b2b5d;
+  color: black;
   outline: none;
   background: none;
   border: none;
   border-bottom: 2.5px solid;
- }
+}
 
 #auth input:focus {
   border-color: #1b2b5d;
@@ -512,7 +538,6 @@ input.form-btn:hover {
 }
 
 #auth button {
-  /* color: #1b2b5d; */
   border: none;
   margin-top: 20px;
   background: rgba(#1b2b5d, 0.7);
@@ -536,23 +561,22 @@ input.form-btn:hover {
 #slider {
   color: white;
   position: absolute;
-  top: 20px;
+  top: 0;
   left: 0;
-  width: 50vw;
-  height: 100vh;
+  width: 50%;
+  height: 100%;
   background-image: url('../assets/pets-image2.jpeg');
-  background-attachment : fixed;
+  background-attachment: fixed;
   background-repeat: no-repeat;
-  background-size: 100vw;
+  background-size: cover;
   transition: left 300ms ease;
   clip-path: inset(0);
-  
 }
 
 #slider:before {
   content: "";
   display: block;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   min-height: 100vh;
@@ -566,23 +590,23 @@ input.form-btn:hover {
   position: fixed;
   height: 100%;
   width: 50vw;
-  padding: 50px;
-  top: 0;
-  z-index: 100;
+  padding: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  top: 0;
 }
 
 #login-text {
   left: 0;
+  margin-bottom: 100px;
 }
 
 #sign-up-text {
   left: 50vw;
-
+  margin-bottom: 100px;
 }
 
 .toggle {
@@ -639,23 +663,138 @@ input.form-btn:hover {
   transform: translate(-50%, -50%);
 }
 
-#auth .toggle-tabs {
+.input-with-icon {
+  position: relative;
   display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-  
+  align-items: center;
 }
 
-#auth .toggle-tab {
+.input-with-icon input {
+  width: 100%;
+  padding-right: 30px; /* Add space for the icon */
+}
+
+.icon-error, .icon-success {
+  position: absolute;
+  right: 10px;
+}
+
+.input-error {
+  border: 2px solid red;
+}
+
+.input-success {
+  border: 2px solid green;
+}
+
+/* @media (max-width: 1024px) {
+  #auth {
+    flex-direction: column;
+    position: relative;
+  }
+
+  #auth.sign-up #slider {
+    left: 0;
+    height: 50vh;
+    width: 100%;
+  }
+
+  #slider {
+    height: 50vh;
+    width: 100%;
+    transition: left 300ms ease, top 300ms ease;
+  }
+
+  #login-text,
+  #sign-up-text {
+    position: static;
+    width: 100%;
+    padding: 20px;
+  }
+
+  #auth form {
+    padding: 5vh 5vw;
+  }
+
+  #slider {
+    clip-path: inset(0);
+  }
+}
+
+@media (max-width: 600px) {
+  #auth form {
+    padding: 2vh 2vw;
+  }
+
+  #login-text,
+  #sign-up-text {
+    padding: 10px;
+  }
+
+  #auth .radio-group {
+    flex-direction: column;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  #auth form {
+    padding: 2vh 1vw;
+  }
+
+  #slider div {
+    padding: 15px;
+  }
+
+  #login-text,
+  #sign-up-text {
+    padding: 5px;
+  }
+} */
+
+/* -----------------video hover---------------------- */
+.hover-video-container {
+  position: relative;
+  display: inline-block;
+}
+
+.hover-video-button {
   padding: 10px 20px;
+  font-size: 16px;
   cursor: pointer;
-  font-size: 18px;
-  color: #757575;
-  border-bottom: 2px solid transparent;
-  transition: border-color 0.3s ease;
 }
 
-#auth .toggle-tab.active {
-  color: #1b2b5d;
-  border-bottom: 2px solid #1b2b5d;
+.video-popup {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  justify-content: center;
+  align-items: center;
+  transform: translateX(-50%);
+  z-index: 100;
+  background-color: seashell;
+  /* border: 1px solid #ccc; */
+  /* padding-top: 10px; */
+  padding: 2px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 600px;
+  height: 500px;
 }
+
+.video-popup iframe {
+  width: 100%;
+  height: 100%;
+}
+
+.video-popup button {
+  display: block;
+  margin: 10px auto 0;
+  padding: 5px 10px;
+  background-color: #1b2b5d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* -----------------end of video hover------------------ */

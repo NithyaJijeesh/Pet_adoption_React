@@ -4,26 +4,60 @@ import NavBar from '../Landing Page/NavBar';
 import '../components.css';
 import { Box } from '@mui/material';
 import CustomButton from '../Button/CustomButton';
-import CustomButton2 from '../Button/CustomButton2';
+import ErrorIcon from '@mui/icons-material/Error';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useNavigate } from 'react-router-dom';
+
 
 function Registration() {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [role, setRole] = useState('donor');
+  const [phone, setPhone] = useState('+91 ');
+  const [phoneError, setPhoneError] = useState('');
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const navigate = useNavigate();
 
-  const handleToggle = () => {
-    setIsSignUp(!isSignUp);
-  };
+
 
   const handleRadioChange = (e) => {
     setRole(e.target.value);
   };
 
+  const handlePhoneChange = (e) => {
+    const input = e.target.value;
+    if (input.startsWith('+91 ')) {
+      const number = input.slice(4);
+      if (/^\d{0,10}$/.test(number)) {
+        setPhone(input);
+        if (number.length !== 10) {
+          setPhoneError('Phone number must be 10 digits long');
+        } else {
+          setPhoneError('');
+        }
+      }
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    const input = e.target.value;
+    setEmail(input);
+    if (/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(input)) {
+      setEmailError('');
+    } else {
+      setEmailError('Invalid email format');
+    }
+  };
+
+  const redirectToLogin = () => {
+    navigate('/login'); // Navigate to /login route
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }} className="custom-scrollbar">
       <NavBar />
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-        <section id="auth" className={isSignUp ? 'sign-up' : ''}>
-          <form id="sign-up">
+      <Box id= 'log-reg' >
+        <section id="auth" >
+          <form id="sign-up" className="form-large-screen">
             <h2>Time to feel like home</h2>
             <label>First Name</label>
             <input type="text" />
@@ -31,10 +65,43 @@ function Registration() {
             <input type="text" />
             <label>Username</label>
             <input type="text" />
-            <label>Password</label>
+            <label>Email</label>
+            {/* <input type="text" /> */}
+            <div className="input-with-icon">
+              <input
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                className={emailError ? 'input-error' : 'input-success'}
+              />
+              {emailError ? (
+                <ErrorIcon className="icon-error" />
+              ) : (
+                email && <CheckCircleIcon className="icon-success" />
+              )}
+            </div>
+            <label>Phone</label>
+            <div className="input-with-icon">
+              <input
+                type="tel"
+                value={phone}
+                onChange={handlePhoneChange}
+                className={phoneError ? 'input-error' : 'input-success'}
+              />
+              {phoneError ? (
+                <ErrorIcon className="icon-error" />
+              ) : (
+                phone.length === 14 && <CheckCircleIcon className="icon-success" />
+              )}
+            </div>
+            <label>Address</label>
+            <textarea rows='2' />
+            <label>Upload File</label>
+            <input type="file" />
+            {/* <label>Password</label>
             <input type="password" />
             <label>Confirm Password</label>
-            <input type="password" />
+            <input type="password" /> */}
 
             <div className="radio-group">
               <label className="radio-label">
@@ -48,47 +115,20 @@ function Registration() {
                 Buyer
               </label>
             </div>
-            <Box my={2} sx={{ justifyContent: 'center', textAlign: 'center', marginLeft: '30%' }}>
+            <Box my={2} sx={{ justifyContent: 'center', textAlign: 'center', marginLeft: '35%' }}>
               <CustomButton type="submit" text="Sign up" onClick={(e) => e.preventDefault()} />
             </Box>
             <div className="toggle">
               Already have an account?
-              <span onClick={handleToggle} sx={{ color: '#1b2b5d' }}> Log in</span>
+              {/* <span onClick={handleToggle} sx={{ color: '#1b2b5d' }}> Log in</span> */}
+              <span onClick={redirectToLogin} style={{ color: '#1b2b5d', cursor: 'pointer' }}> Log in</span>
+
             </div>
           </form>
 
-          <form id="login">
-            <h2>Welcome back</h2>
-            <label>Username</label>
-            <input type="text" />
-            <label>Password</label>
-            <input type="password" />
-            <Box my={2} sx={{ justifyContent: 'center', textAlign: 'center', marginLeft: '30%' }}>
-              <CustomButton type="submit" text="Log in" onClick={(e) => e.preventDefault()} />
-            </Box>
-            <div className="toggle" justifyContent='center' textAlign='center'>
-              Have you been here before?
-              <span onClick={handleToggle} sx={{ color: '#1b2b5d' }}> Sign up</span>
-            </div>
-          </form>
 
-          <div id="slider">
-            <div id="login-text">
-              <Box my={2} sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                <h1>Good to see you again</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
-                <CustomButton2 type="button" text="Sign up" onClick={handleToggle}/>
-              </Box>
-            </div>
-            <div id="sign-up-text">
-              <Box my={2} sx={{ justifyContent: 'center', textAlign: 'center' }}>
-                <h1>Welcome to <em>PETIFY</em></h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
-                <CustomButton2 type="button" text="Log in" onClick={handleToggle}/>
-              </Box>
-            </div>
-          </div>
         </section>
+
       </Box>
       <Footer />
     </div>
