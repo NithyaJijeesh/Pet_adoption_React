@@ -60,7 +60,7 @@ function  Footer() {
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: '1rem', mb: 2 }}>
               <Typography 
                 component="a" 
-                href="#!" 
+                href="/" 
                 sx={{ 
                   textDecoration: 'none', 
                   color: 'inherit', 
@@ -73,7 +73,7 @@ function  Footer() {
               </Typography>
               <Typography 
                 component="a" 
-                href="#!" 
+                href="/" 
                 sx={{ 
                   textDecoration: 'none', 
                   color: 'inherit', 
@@ -86,7 +86,7 @@ function  Footer() {
               </Typography>
               <Typography 
                 component="a" 
-                href="#!" 
+                href="/" 
                 sx={{ 
                   textDecoration: 'none', 
                   color: 'inherit', 
@@ -100,7 +100,7 @@ function  Footer() {
 
               <Typography 
                 component="a" 
-                href="#!" 
+                href="/" 
                 sx={{ 
                   textDecoration: 'none', 
                   color: 'inherit', 
@@ -116,13 +116,13 @@ function  Footer() {
 
           <Grid item xs={12}>
             <section className='mb-4'>
-              <IconButton sx={{ color: 'green' }} href='#!'>
+              <IconButton sx={{ color: 'green' }} href='/'>
                 <WhatsappIcon />
               </IconButton>
-              <IconButton sx={{ color: '#3b5998' }} href='#!'>
+              <IconButton sx={{ color: '#3b5998' }} href='/'>
                 <FacebookIcon />
               </IconButton>
-              <IconButton sx={{ color: '#E1306C' }} href='#!'>
+              <IconButton sx={{ color: '#E1306C' }} href='/'>
                 <InstagramIcon />
               </IconButton>
             </section>

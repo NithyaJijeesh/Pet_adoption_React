@@ -19,16 +19,16 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const pagesMap = {
   Home: '/',
-  Category: '/category',
-  About: '/about',
-  Contact: '/contact'
+  Category: '/',
+  About: '/',
+  Contact: '/'
 };
 
 const pagesExtraMap = {
   Home: '/',
-  Category: '/category',
-  About: '/about',
-  Contact: '/contact',
+  Category: '/',
+  About: '/',
+  Contact: '/',
   Login : '/login'
 };
 

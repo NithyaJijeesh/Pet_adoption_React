@@ -5,7 +5,7 @@ import NavBar from './NavBar';
 import HeroSection from './HeroSection';
 import Footer from './Footer';
 import AspectRatio from '@mui/joy/AspectRatio';
-import ClickableCard from '../ClickableCard';
+import ClickableCard from './ClickableCard';
 import aboutImage1 from '../../assets/bird.jpeg';
 import aboutImage2 from '../../assets/pet-images-11.jpg';
 import catImage from '../../assets/cat.png';
