@@ -1,96 +1,89 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Footer from '../Landing Page/Footer';
 import NavBar from '../Landing Page/NavBar';
 import '../components.css'; 
-import { Box } from '@mui/material';
+import { Alert, Box } from '@mui/material';
 import CustomButton from '../Button/CustomButton';
-import '../components.css';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import AxiosInstance from '../axios';
+import Cookies from 'js-cookie';
 
-
-
-function Login () {
+function Login() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState()
-  const [password, setPassword] = useState()
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const redirectToLogin = () => {
+  const redirectToRegistration = () => {
     navigate('/registration'); 
   };
 
-  function HandleSubmit(){
-    console.log('yes')
-    if(username && password){
-      console.log(password,username)
-      let data =  {
+  const handleSubmit = (e) => {
+
+    e.preventDefault();
+
+    if (username && password) {
+      
+      let data = {
         "password": password,
         "username": username
-      }
-      const headers = { 
-        'Content-Type': 'application/json'
-      }
-      axios.post('http://127.0.0.1:8000/login/',data,headers)
+      };
+
+      AxiosInstance.post('login/', data)
         .then(response => {
-          if (response.data) {
-            console.log(response.data)
+
+          const { access, refresh } = response.data;
+          const decoded = JSON.parse(atob(access.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          const userType = decoded.user_type;
+          // const superuser = decoded.is_superuser;
+
+          // Cookies.set('accessToken', response.data.access, { expires: 7 });
+          // Cookies.set('refreshToken', response.data.refresh, { expires: 7 });
+          Cookies.set('accessToken', access, { expires: 7 });
+          Cookies.set('refreshToken', refresh, { expires: 7 });
+          Cookies.set('userType', userType, { expires: 7 });
+
+          if (userType === 'admin') {
+            console.log(userType)
+            navigate('/admindashboard');
+          } else if (userType === 'donor') {
+            navigate('/donordashboard');
+          } else if (userType === 'buyer') {
+            navigate('/buyerdashboard');
           } else {
-            console.log('Some error during login')
-            // toast.error('Some error during login');
+            navigate('/login');
           }
         })
         .catch(error => {
-          console.log(error)
-          // toast.error('Failed to login');
+          console.error(error);
+          setErrorMessage('Invalid username or password. Please try again.');
         });
+    } else {
+      setErrorMessage('Enter Username and Password');
     }
-    else{
-      alert("Enter Username and Password")
-    }
-    
   }
 
-  // useEffect(() => {
-  //   AxiosInstance.get(`login/data/`)
-  //     .then(response => {
-  //       if (response.data) {
-  //         console.log(response.data)
-  //       } else {
-  //         toast.error('No customers or items found');
-  //       }
-  //     })
-  //     .catch(error => {
-  //       toast.error('Failed to load customers and items');
-  //     });
-  // }, []);
- 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }} className="custom-scrollbar">
       <NavBar />
-      {/* <div>
-        <ToastContainer />
-      </div> */}
-      <Box id= 'log-reg' >
-        <section id="auth" >
-
-
+      
+      <Box id='log-reg'>
+        <section id="auth">
           <form id="login">
+          {errorMessage && <Alert variant="outlined" severity="error">{errorMessage}</Alert>}
             <h2>Welcome back</h2>
             <label>Username</label>
-            <input type="text" onChange={ (e) => setUsername(e.target.value)} />
+            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
             <label>Password</label>
-            <input type="password" onChange={ (e) => setPassword(e.target.value)} />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <Box my={2} sx={{ justifyContent: 'center', textAlign: 'center', marginLeft: '35%' }}>
-              <CustomButton type="submit" text="Log in" onClick={HandleSubmit} />
+              <CustomButton type="submit" text="Log in" onClick={handleSubmit} />
             </Box>
             <div className="toggle" justifyContent='center' textAlign='center'>
               Have you been here before?
-              <span onClick={redirectToLogin} sx={{ color: '#1b2b5d' }}> Sign up</span>
+              <span onClick={redirectToRegistration} sx={{ color: '#1b2b5d' }}> Sign up</span>
             </div>
           </form>
-
-
         </section>
       </Box>
       <Footer />
