@@ -7,12 +7,29 @@ import CustomButton from '../Button/CustomButton';
 import { useNavigate } from 'react-router-dom';
 import AxiosInstance from '../axios';
 import Cookies from 'js-cookie';
+import {Icon} from 'react-icons-kit';
+import {eyeOff} from 'react-icons-kit/feather/eyeOff';
+import {eye} from 'react-icons-kit/feather/eye'
+
 
 function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  const [type, setType] = useState('password');
+  const [icon, setIcon] = useState(eyeOff);
+
+  const handleToggle = () => {
+    if (type === 'password') {
+      setIcon(eye);
+      setType('text');
+    } else {
+      setIcon(eyeOff);
+      setType('password');
+    }
+  };
 
   const redirectToRegistration = () => {
     navigate('/registration'); 
@@ -35,10 +52,7 @@ function Login() {
           const { access, refresh } = response.data;
           const decoded = JSON.parse(atob(access.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
           const userType = decoded.user_type;
-          // const superuser = decoded.is_superuser;
 
-          // Cookies.set('accessToken', response.data.access, { expires: 7 });
-          // Cookies.set('refreshToken', response.data.refresh, { expires: 7 });
           Cookies.set('accessToken', access, { expires: 7 });
           Cookies.set('refreshToken', refresh, { expires: 7 });
           Cookies.set('userType', userType, { expires: 7 });
@@ -69,13 +83,22 @@ function Login() {
       
       <Box id='log-reg'>
         <section id="auth">
-          <form id="login">
-          {errorMessage && <Alert variant="outlined" severity="error">{errorMessage}</Alert>}
+          <form id="login" onSubmit={handleSubmit}>
+          {errorMessage && <Alert variant="outlined" severity="error" style={{ color: 'red' }}>{errorMessage}</Alert>}
             <h2>Welcome back</h2>
             <label>Username</label>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} className='login-input'/>
             <label>Password</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            {/* <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <span class="flex justify-around items-center" onClick={handleToggle}>
+                <Icon class="absolute mr-10" icon={icon} size={25}/>
+            </span> */}
+            <div className="password-input-container">
+              <input type={type} value={password} onChange={(e) => setPassword(e.target.value)} />
+              <span onClick={handleToggle}>
+                <Icon icon={icon} size={25} />
+              </span>
+            </div>
             <Box my={2} sx={{ justifyContent: 'center', textAlign: 'center', marginLeft: '35%' }}>
               <CustomButton type="submit" text="Log in" onClick={handleSubmit} />
             </Box>

@@ -798,3 +798,22 @@ input.form-btn:hover {
 }
 
 /* -----------------end of video hover------------------ */
+
+
+/* ----------------password eye icon-------------------- */
+.password-input-container, .login-input {
+  display: flex;
+  align-items: center;
+}
+
+.password-input-container input {
+  flex: 1;
+  width: 100%;
+}
+
+.password-input-container span {
+  cursor: pointer;
+  margin-left: -30px; /* Adjust this value as needed */
+}
+
+/* ----------------------end of password---------------- */

@@ -1,7 +1,10 @@
 from pathlib import Path
 from datetime import timedelta
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 SECRET_KEY = 'django-insecure-g_f5vhejc+#-%%@l@*o*0c9@q&%l8-14k5%+j$b-u-x*b*py0p'
@@ -142,6 +145,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -177,3 +183,13 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
 }
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'niyavijayan@gmail.com'
+EMAIL_HOST_PASSWORD = 'fyeb nngc hgpd pchf'
+# EMAIL_HOST_USER = 'nithyavijayan687@gmail.com'
+# EMAIL_HOST_PASSWORD = 'Welcomeemail@123'

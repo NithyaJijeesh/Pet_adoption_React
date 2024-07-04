@@ -5,31 +5,17 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
- import Container from '@mui/material/Container';
- import MenuItem from '@mui/material/MenuItem';
+import Container from '@mui/material/Container';
+import MenuItem from '@mui/material/MenuItem';
 import '../components.css';
 import pawLogo from '../../assets/logo2.png'; 
- import {  useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { Avatar, Divider, ListItemIcon, Tooltip } from '@mui/material';
- import Settings from '@mui/icons-material/Settings';
+import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import Cookies from "js-cookie"
 
 
-// const pagesMap = {
-//   Home: '/',
-//   Category: '/',
-//   About: '/',
-//   Contact: '/'
-// };
-
-// const pagesExtraMap = {
-//   Home: '/',
-//   Category: '/',
-//   About: '/',
-//   Contact: '/',
-//   Login : '/login'
-// };
 
 const AdminNav = () => {
 
@@ -52,7 +38,6 @@ const AdminNav = () => {
 
 
   const handleLogout = () => {
-    // localStorage.removeItem('auth_token')
     Cookies.remove('accessToken');
     navigate('/')
 
@@ -92,60 +77,6 @@ const AdminNav = () => {
             PETIFY
           </Typography>
           
-
-          {/* <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-             <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              sx={{ color: '#1b2b5d', }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },  
-                justifyContent: 'flex-end',
-                color: 'red',
-              }}
-            >
-              {Object.keys(pagesExtraMap).map((page) => (
-                <MenuItem 
-                  key={page} 
-                  onClick={handleCloseNavMenu} 
-                  component="a"
-                  href={pagesExtraMap[page]} 
-                >
-                  <Typography 
-                    textAlign="center" 
-                    sx={{ 
-                          color : '#1b2b5d', 
-                          fontWeight:550, 
-                          textTransform: 'uppercase'
-                        }}
-                  >
-                    {page}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu> 
-          </Box> */}
-
           <Box display={{ xs: 'flex', md: 'none', mr: 1 }} m={0} p={0}>
             <img src={pawLogo} alt="logo" style={{ height: '80px', width: '80px', mr : 0 }} />
           </Box>

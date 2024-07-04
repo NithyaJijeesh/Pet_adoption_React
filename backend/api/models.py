@@ -35,8 +35,10 @@ class CustomUser(AbstractUser):
         ('buyer', 'Buyer'),
     )
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='buyer')
-
+    phone = models.CharField(max_length=100,null=True,blank=True)
+    address = models.CharField(max_length=255,null=True, blank=True)
+    image = models.ImageField(upload_to='images/', null=True, blank=True)
     objects = CustomUserManager()
 
-    # def __str__(self) :
-    #     return "{}".format(self.username)
+    def __str__(self) :
+        return "{}".format(self.username)

@@ -26,6 +26,7 @@ import detailsImg1 from '../../assets/dog-adopt.jpg';
 import detailsImg2 from '../../assets/cat-adopt.jpeg';
 import '../components.css';
 import CustomButton from '../Button/CustomButton';
+import Cookies from 'js-cookie'
 
 function Home() {
 
@@ -47,6 +48,9 @@ function Home() {
   ];
 
   useEffect(() => {
+
+    Cookies.remove('accessToken');
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

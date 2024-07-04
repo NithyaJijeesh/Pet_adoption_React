@@ -6,7 +6,6 @@ function BuyerRoute() {
     const token = Cookies.get('accessToken');
     const userType = Cookies.get('userType');
     return (
-        //   token ? <Outlet></Outlet> : <Navigate to={'/login'}/>
         token && userType === 'buyer' ? <Outlet /> : <Navigate to="/login" />
     )
 }
