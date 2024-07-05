@@ -45,13 +45,14 @@ function Login() {
         "password": password,
         "username": username
       };
-
+      console.log(data)
       AxiosInstance.post('login/', data)
         .then(response => {
-
+          console.log(response.data)
           const { access, refresh } = response.data;
           const decoded = JSON.parse(atob(access.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
           const userType = decoded.user_type;
+          console.log(access)
 
           Cookies.set('accessToken', access, { expires: 7 });
           Cookies.set('refreshToken', refresh, { expires: 7 });

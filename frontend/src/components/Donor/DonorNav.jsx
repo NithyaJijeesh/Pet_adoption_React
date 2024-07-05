@@ -15,20 +15,40 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import Cookies from "js-cookie"
 import AxiosInstance from '../axios';
+import { useState } from 'react';
+import defaultProfileImage from '../../assets/default_image.jpeg';
+
 
 function DonorNav() {
   
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+    const [profileImage, setProfileImage] = useState(defaultProfileImage);
+    const [profileName, setProfileName] = useState('Donor');
+
     const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+        setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
-    setAnchorEl(null);
+        setAnchorEl(null);
     };
     useEffect(() => {
         document.body.classList.add('home-background');
+
+        AxiosInstance.get('donors/')
+        .then(response => {
+            console.log(response.data[0]?.image)
+            const relativeImagePath = response.data[0]?.image || defaultProfileImage;
+            const imageUrl = relativeImagePath.startsWith('/media/') ? `${AxiosInstance.defaults.baseURL}${relativeImagePath}` : defaultProfileImage; // Construct full URL 
+            setProfileImage(imageUrl);
+
+            const profilename = response.data[0].first_name ? `${response.data[0].first_name} ${response.data[0].last_name}` : 'Donor';
+            setProfileName(profilename);
+        })
+        .catch(error => {
+            console.error(error);
+        });
 
         return () => {
             document.body.classList.remove('home-background');
@@ -126,7 +146,7 @@ function DonorNav() {
 
 
             <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Typography sx={{ minWidth: 50, color: '#1b2b5d', fontWeight: 600 }}>Donor</Typography>
+        <Typography sx={{ minWidth: 50, color: '#1b2b5d', fontWeight: 600, textTransform:'capitalize' }}>{profileName}</Typography>
         <Tooltip title="Account settings">
             <IconButton
             onClick={handleClick}
@@ -136,7 +156,8 @@ function DonorNav() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
             >
-            <Avatar sx={{ width: 50, height: 50, backgroundColor:'#1b2b5d' }}>D</Avatar>
+            <Avatar src={profileImage} sx={{ width: 50, height: 50, backgroundColor: '#1b2b5d' }} />
+            {/* <Avatar sx={{ width: 50, height: 50, backgroundColor:'#1b2b5d' }}>D</Avatar> */}
             </IconButton>
         </Tooltip>
         </Box>
@@ -176,7 +197,7 @@ function DonorNav() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
         <MenuItem onClick={handleClose}>
-            <Avatar sx={{ backgroundColor: '#1b2b5d'}}/> Profile
+            <Avatar sx={{ backgroundColor: '#1b2b5d'}} src={profileImage}/> Profile
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleClose}>

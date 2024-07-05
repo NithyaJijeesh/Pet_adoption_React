@@ -13,6 +13,10 @@ from rest_framework import status
 # from django.contrib.auth.models import update_last_login
 from .serializers import CustomTokenObtainPairSerializer
 from django.core.mail import send_mail
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
@@ -114,23 +118,33 @@ class AdminDashboardView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]
     def get(self, request):
+        print(f'User: {request.user}, Is Admin: {request.user.is_staff}')
         data = {
             'message': 'Welcome to the admin dashboard'
         }
         return Response(data)
     
 class BuyerView(APIView):
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+
         buyers = CustomUser.objects.filter(user_type='buyer')
         serializer = UserSerializer(buyers, many=True)
         return Response(serializer.data)
 
 class DonorView(APIView):
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        if not request.user.is_authenticated:
+            return Response({'error': 'User not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        if request.user.user_type != 'donor':
+            return Response({'error': 'User not authorized'}, status=status.HTTP_403_FORBIDDEN)
+        
         donors = CustomUser.objects.filter(user_type='donor')
         serializer = UserSerializer(donors, many=True)
         return Response(serializer.data)
