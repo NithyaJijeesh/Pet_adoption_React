@@ -16,17 +16,20 @@ const AxiosInstance = axios.create({
 
 // Request interceptor to log headers
 AxiosInstance.interceptors.request.use(config => {
-  console.log('Request headers:', config.headers);
-  return config;
-}, error => {
-  return Promise.reject(error);
+  const token = Cookies.get('accessToken');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  }, error => {
+    return Promise.reject(error);
 });
 
 AxiosInstance.interceptors.response.use(
   response => response,
   error => {
     if (error.response && error.response.status === 401) {
-      Cookies.remove('accessToken');
+      // Cookies.remove('accessToken');
       window.location.href = '/login'; 
     }
     return Promise.reject(error);
