@@ -42,3 +42,20 @@ class CustomUser(AbstractUser):
 
     def __str__(self) :
         return "{}".format(self.username)
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+class Breed(models.Model):
+    name = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, related_name='breeds', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+    
+    
+

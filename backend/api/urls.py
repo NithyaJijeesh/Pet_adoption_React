@@ -11,6 +11,8 @@ urlpatterns = [
     path('login/', CustomTokenObtainPairView.as_view(), name='login'),
 
     path('admindashboard/', AdminDashboardView.as_view(), name='admin_dashboard'),
+    path('categories/', CategoryView.as_view(), name='category-list-create'),
+    path('breeds/', BreedView.as_view(), name='breed-list-create'),
     
     path('buyers/', BuyerView.as_view(), name='buyer-list'),
 

@@ -148,5 +148,30 @@ class DonorView(APIView):
         donors = CustomUser.objects.filter(user_type='donor')
         serializer = UserSerializer(donors, many=True)
         return Response(serializer.data)
-
     
+
+class CategoryView(APIView):
+    def get(self, request):
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class BreedView(APIView):
+    def get(self, request):
+        breeds = Breed.objects.all()
+        serializer = BreedSerializer(breeds, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = BreedSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    

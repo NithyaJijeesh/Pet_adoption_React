@@ -40,3 +40,17 @@ class UserSerializer(serializers.ModelSerializer):
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
+
+
+
+class BreedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Breed
+        fields = ['id', 'name', 'category']
+
+class CategorySerializer(serializers.ModelSerializer):
+    breeds = BreedSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'breeds']

@@ -1,30 +1,34 @@
 @charset "UTF-8";
-/* @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap"); */
+/* Font Imports */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Quattrocento+Sans&display=swap");
 
 
+
+/* Base Styles */
 body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #fdfcfc;
 }
 
 
+/* Hide Scrollbars */
 * {
-  scrollbar-width: none;  
-  -ms-overflow-style: none;   
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
- *::-webkit-scrollbar {
+*::-webkit-scrollbar {
   display: none;
 }
 
-.categoryCard{
+/* Category Cards */
+.categoryCard {
   background-color: #1b2b5d;
   color: seashell;
- }
+}
 
- body{
-  background-color: #fdfcfc;
- }
+
 .home-background {
   background-color: #fdfcfc;
   background-size: cover; 
@@ -43,7 +47,9 @@ body {
   background-color: #1b2b5d;
 }
 
-nav-bar .tnb-right-section .tnb-login-btn {
+
+/* Navigation Bar */
+.nav-bar .tnb-right-section .tnb-login-btn {
   position: relative;
   width: 112px;
   height: 40px;
@@ -59,6 +65,7 @@ nav-bar .tnb-right-section .tnb-login-btn {
 }
 
 
+/* Main Box and Form Styles */
 .main-box {
   position: relative;
   display: block;
@@ -452,7 +459,6 @@ input.form-btn:hover {
 }
 
 
-@import url("https://fonts.googleapis.com/css?family=Quattrocento+Sans&display=swap");
 
 #log-reg {
   display: flex;
