@@ -5,32 +5,37 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-// import TablePagination from '@mui/material/TablePagination';s
 import TableRow from '@mui/material/TableRow';
 import AdminNav from './AdminNav';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const columns = [
-  { id: 'name', label: 'Name', minWidth: 150 },
-  { id: 'code', label: 'Category', minWidth: 100 },
+  { id: 'name', label: 'Name', minWidth: 170 },
+  { id: 'code', label: 'Email', minWidth: 100 },
   {
     id: 'population',
-    label: 'Breed/ Family',
-    minWidth: 100,
+    label: 'Phone',
+    minWidth: 170,
     align: 'right',
     format: (value) => value.toLocaleString('en-US'),
   },
   {
     id: 'size',
-    label: 'Donor',
-    minWidth: 100,
+    label: 'Address',
+    minWidth: 170,
     align: 'right',
     format: (value) => value.toLocaleString('en-US'),
   },
   {
     id: 'density',
+    label: 'User',
+    minWidth: 170,
+    align: 'right',
+    format: (value) => value.toFixed(2),
+  },
+  {
+    id: 'density',
     label: 'Action',
-    minWidth: 100,
+    minWidth: 170,
     align: 'right',
     format: (value) => value.toFixed(2),
   },
@@ -62,7 +67,7 @@ const rows = [
  
 ];
 
-export default function Pets() {
+export default function DonorDetails() {
 //   const [page, setPage] = React.useState(0);
 //   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -77,7 +82,7 @@ export default function Pets() {
 
   const content = (
     <Paper py={5} sx={{ width: '100%', overflow: 'hidden', borderRadius: '10px', backgroundColor:'#F0F4F8' }}>
-        <h2 sx={{ fontFamily : 'cursive', color: '#1b2b5d'}}>Pet Details</h2>
+        <h2 sx={{ fontFamily : 'cursive', color: '#1b2b5d'}}>Donor Details</h2>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -86,7 +91,7 @@ export default function Pets() {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidt, backgroundColor:'#1b2b5d', color: 'seashell' }}
+                  style={{ minWidth: column.minWidth, backgroundColor:'#1b2b5d', color: 'seashell' }}
                 >
                   {column.label}
                 </TableCell>
@@ -107,22 +112,11 @@ export default function Pets() {
                             ? column.format(value)
                             : value}
                         </TableCell>
-                        
                       );
-                    //   <MoreVertIcon />
                     })}
-                    
                   </TableRow>
-
-                
                 );
-                
               })}
-              {/* <TableRow hover role="checkbox" tabIndex={-1} >
-                <TableCell >
-                        <MoreVertIcon />
-                </TableCell>
-            </TableRow> */}
           </TableBody>
         </Table>
       </TableContainer>

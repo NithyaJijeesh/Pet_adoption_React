@@ -57,7 +57,7 @@ function Registration() {
   };
 
   const handleImageChange = (e) => {
-    // setImage(e.target.files[0]);
+
     const file = e.target.files[0];
     if (file) {
       setImage(file);
@@ -78,8 +78,10 @@ function Registration() {
     formData.append('phone', phone);
     formData.append('address', address);
     formData.append('user_type', role);
-    formData.append('image', image);
     formData.append('password', generateRandomPassword());
+    if (image) {
+        formData.append('image', image );
+    }
 
     AxiosInstance.post('register/', formData, {
       headers: {

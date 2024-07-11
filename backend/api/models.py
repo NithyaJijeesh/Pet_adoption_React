@@ -1,6 +1,7 @@
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.conf import settings
 
 
 class CustomUserManager(BaseUserManager):
@@ -37,7 +38,7 @@ class CustomUser(AbstractUser):
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='buyer')
     phone = models.CharField(max_length=100,null=True,blank=True)
     address = models.CharField(max_length=255,null=True, blank=True)
-    image = models.ImageField(upload_to='images/', null=True, blank=True)
+    image = models.ImageField(upload_to='images/profile/', null=True, blank=True)
     objects = CustomUserManager()
 
     def __str__(self) :
@@ -56,6 +57,31 @@ class Breed(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Donation(models.Model):
+
+    STATUS_CHOICES = [
+        ('approved', 'Approved'),
+        ('pending', 'Pending Approval'),
+    ]
+
+    PURCHASE_STATUS_CHOICES = [
+        ('purchased', 'Purchased'),
+        ('not_purchased', 'Not Purchased'),
+    ]
+
+    donor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
+    breed = models.ForeignKey(Breed, on_delete=models.CASCADE, null=True, blank=True)
+    description = models.CharField(max_length=100, null=True, blank=True)
+    image = models.ImageField(upload_to='images/donated/', null=True, blank=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    purchase_status = models.CharField(max_length=15, choices=PURCHASE_STATUS_CHOICES, default='not_purchased')
+
+class AdditionalImage(models.Model):
+    donation = models.ForeignKey(Donation, related_name='additional_images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images/donated/additional/')
     
     
 

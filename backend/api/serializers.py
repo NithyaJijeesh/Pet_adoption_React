@@ -46,11 +46,41 @@ class UserLoginSerializer(serializers.Serializer):
 class BreedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Breed
-        fields = ['id', 'name', 'category']
+        fields = '__all__'
 
 class CategorySerializer(serializers.ModelSerializer):
     breeds = BreedSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'breeds']
+        fields = '__all__'
+
+class AdditionalImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdditionalImage
+        fields = ['id', 'image']
+
+class DonationSerializer(serializers.ModelSerializer):
+    donor = serializers.SerializerMethodField()
+    category = CategorySerializer(read_only=True)
+    breed = BreedSerializer(read_only=True)
+    category_id = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), source='category', write_only=True)
+    breed_id = serializers.PrimaryKeyRelatedField(queryset=Breed.objects.all(), source='breed', write_only=True)
+    additional_images = AdditionalImageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Donation
+        fields = '__all__'
+
+    def get_donor(self, obj):
+        if obj.donor and obj.donor.user_type == 'donor':
+            return UserSerializer(obj.donor).data
+        return None
+
+    def create(self, validated_data):
+        images_data = self.context['request'].FILES.getlist('additional_images')
+        main_image = self.context['request'].FILES.get('main_image')
+        donation = Donation.objects.create(**validated_data, image=main_image)
+        for image_data in images_data:
+            AdditionalImage.objects.create(donation=donation, image=image_data)
+        return donation

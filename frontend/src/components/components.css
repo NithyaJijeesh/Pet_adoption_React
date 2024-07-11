@@ -824,3 +824,24 @@ input.form-btn:hover {
 }
 
 /* ----------------------end of password---------------- */
+
+
+
+/* -------------------category adding=------------------ */
+
+.category-form{
+  border-radius: 20px;
+}
+.category-form h2{
+  font-family: cursive;
+  justify-content: center;
+  text-align: center;
+  color: #1b2b5d;
+  padding-top: 2%;
+  padding-bottom: 0%;
+}
+
+.category-form h3{
+  justify-content: left;
+  text-align: left;
+}

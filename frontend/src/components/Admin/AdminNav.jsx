@@ -10,7 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import '../components.css';
 import pawLogo from '../../assets/logo2.png';
 import { useNavigate, Link } from 'react-router-dom';
-import { Avatar, CssBaseline, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip, useMediaQuery } from '@mui/material';
+import { Avatar, CssBaseline, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip } from '@mui/material';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import Cookies from "js-cookie";
@@ -20,6 +20,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import PetsIcon from '@mui/icons-material/Pets';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 const drawerWidth = 300;
 
@@ -28,7 +29,7 @@ const AdminNav = (props) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const isMobile = useMediaQuery('(max-width:600px)');
+  // const isMobile = useMediaQuery('(max-width:600px)');
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -278,8 +279,25 @@ const AdminNav = (props) => {
               </ListItemButton>
             </ListItem>
           </List>
-          <Divider />
+          
+          <Divider sx={{ color: 'seashell', my: 2 }} />
+
           <List>
+          <ListItem>
+            <ListItemButton component={Link} to="/adminnotifications">
+              <ListItemIcon sx={{ marginLeft: 3, color: 'seashell' }}>
+                <NotificationsActiveIcon /> 
+              </ListItemIcon>
+              <ListItemText 
+                primary='Notifications' 
+                sx={{ 
+                  textTransform: 'uppercase', 
+                  fontWeight: 900, 
+                }} 
+              />
+            </ListItemButton>
+            </ListItem>
+
             <ListItem key='Logout' onClick={handleLogout}>
               <ListItemButton>
                 <ListItemIcon sx={{ marginLeft: 3, color: 'seashell' }}>

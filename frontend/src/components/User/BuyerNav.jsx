@@ -17,6 +17,9 @@ import Logout from '@mui/icons-material/Logout';
 import Cookies from "js-cookie"
 import AxiosInstance from '../axios';
 import MenuIcon from '@mui/icons-material/Menu';
+import KeyIcon from '@mui/icons-material/Key';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 
 
 const pagesMap = {
@@ -31,7 +34,7 @@ const pagesExtraMap = {
   Category: '/',
   About: '/',
   Contact: '/',
-//   Login : '/login'
+  Logout : "Cookies.remove('accessToken')"
 };
     
 
@@ -57,12 +60,12 @@ function BuyerNav() {
 
         AxiosInstance.get('buyers/')
         .then(response => {
-            console.log(response.data[0]?.image)
-            const relativeImagePath = response.data[0]?.image || defaultProfileImage;
+            console.log(response.data?.image)
+            const relativeImagePath = response.data?.image || defaultProfileImage;
             const imageUrl = relativeImagePath.startsWith('/media/') ? `${AxiosInstance.defaults.baseURL}${relativeImagePath}` : defaultProfileImage; // Construct full URL 
             setProfileImage(imageUrl);
 
-            const profilename = response.data[0] ? `${response.data[0].first_name} ${response.data[0].last_name}` : 'Buyer';
+            const profilename = response.data ? `${response.data.first_name} ${response.data.last_name}` : 'Buyer';
             setProfileName(profilename);
         })
         .catch(error => {
@@ -270,7 +273,17 @@ function BuyerNav() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
         <MenuItem onClick={handleClose}>
-            <Avatar sx={{ backgroundColor: '#1b2b5d'}} src={profileImage}/> Profile
+          <ListItemIcon sx={{ color: '#1b2b5d' }}>
+            <AccountCircleIcon fontSize="small" />
+          </ListItemIcon>
+          Profile
+            {/* <Avatar sx={{ backgroundColor: '#1b2b5d'}} src={profileImage}/> Profile */}
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon sx={{ color: '#1b2b5d' }}>
+            <KeyIcon fontSize="small" />
+          </ListItemIcon>
+          Change Password
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleClose}>

@@ -1,0 +1,49 @@
+/* Registration.css */
+#log-reg {
+    padding: 20px;
+}
+
+#sign-up {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+}
+
+input, textarea, select, label {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.radio-group {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.btnn {
+    width: 100%;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon input {
+    padding-right: 30px;
+}
+
+.icon-error, .icon-success {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.error-message {
+    color: red;
+}
+
+.toggle {
+    text-align: center;
+    margin-top: 10px;
+}
