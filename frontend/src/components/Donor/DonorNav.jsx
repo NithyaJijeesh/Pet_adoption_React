@@ -52,7 +52,7 @@ const DonorNav = (props) => {
         .then(response => {
             
             const relativeImagePath = response.data.image || defaultProfileImage;
-            console.log('Donor details', relativeImagePath)
+
             const imageUrl = relativeImagePath.startsWith('/media/') ? `${AxiosInstance.defaults.baseURL}${relativeImagePath}` : defaultProfileImage; 
             setProfileImage(imageUrl);
 

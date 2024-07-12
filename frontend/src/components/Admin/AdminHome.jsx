@@ -27,7 +27,6 @@ const Admin = () => {
 
       AxiosInstance.get('listdonations/')
       .then(response => {
-        console.log(response.data);
         if (response.data.some(donation => donation.status === 'pending')) {
           setPendingDonations(true);
         }

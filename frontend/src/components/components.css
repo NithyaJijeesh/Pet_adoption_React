@@ -9,6 +9,7 @@
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
   background-color: #fdfcfc;
+  overflow-x: hidden;
 }
 
 
@@ -16,6 +17,7 @@ body {
 * {
   scrollbar-width: none;
   -ms-overflow-style: none;
+
 }
 
 *::-webkit-scrollbar {
@@ -36,6 +38,7 @@ body {
   background-position: center; 
   height: 100vh; 
   width: 100%;
+  overflow-x: hidden;
 }
 
 .home-background .appBar{

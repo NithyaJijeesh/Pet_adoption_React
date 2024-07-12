@@ -21,6 +21,10 @@ function Registration() {
   const [errorMessage, setErrorMessage] = useState('');
   const [emailError, setEmailError] = useState('');
   const [phoneError, setPhoneError] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [emailExistsError, setEmailExistsError] = useState('');
+  const [usernameExistsError, setUsernameExistsError] = useState('');
+
   const navigate = useNavigate();
 
   const handleRadioChange = (e) => {
@@ -47,8 +51,35 @@ function Registration() {
     setEmail(input);
     if (/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(input)) {
       setEmailError('');
+      checkUserExists({ email: input });
     } else {
       setEmailError('Invalid email format');
+    }
+  };
+
+  const handleUsernameChange = (e) => {
+    const input = e.target.value;
+    setUsername(input);
+    if (input) {
+      setUsernameError('');
+      checkUserExists({ username: input });
+    } else {
+      setUsernameError('Username is required');
+    }
+  };
+
+  const checkUserExists = async (params) => {
+    try {
+      const response = await AxiosInstance.get('check_user_exists/', { params });
+      const { username_exists, email_exists } = response.data;
+      if (params.username) {
+        setUsernameExistsError(username_exists ? 'Username already exists' : '');
+      }
+      if (params.email) {
+        setEmailExistsError(email_exists ? 'Email already exists' : '');
+      }
+    } catch (error) {
+      console.error('Error checking user existence:', error);
     }
   };
 
@@ -69,6 +100,11 @@ function Registration() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (emailExistsError || usernameExistsError) {
+      setErrorMessage('Please resolve the errors before submitting.');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('first_name', firstName);
@@ -93,8 +129,18 @@ function Registration() {
       navigate('/login');
     })
     .catch(error => {
-      console.error(error);
-      setErrorMessage('Registration failed. Please try again.');
+      if (error.response && error.response.data) {
+        const errorData = error.response.data;
+        if (errorData.username) {
+          setUsernameExistsError(errorData.username);
+        }
+        if (errorData.email) {
+          setEmailExistsError(errorData.email);
+        }
+        setErrorMessage('Registration failed. Please try again.');
+      } else {
+        setErrorMessage('Registration failed. Please try again.');
+      }
     });
   };
 
@@ -117,7 +163,14 @@ function Registration() {
             <label>Last Name</label>
             <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
             <label>Username</label>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+            {/* <input 
+              type="text" 
+              value={username} 
+              onChange={handleUsernameChange} 
+              className={usernameError || usernameExistsError ? 'input-error' : 'input-success'}
+
+            />
+
             <label>Email</label>
             <div className="input-with-icon">
               <input
@@ -131,7 +184,38 @@ function Registration() {
               ) : (
                 email && <CheckCircleIcon className="icon-success" />
               )}
+            </div> */}
+
+            <div className="input-with-icon">
+              <input
+                type="text"
+                value={username}
+                onChange={handleUsernameChange}
+                className={usernameError || usernameExistsError ? 'input-error' : 'input-success'}
+              />
+              {usernameError || usernameExistsError ? (
+                <ErrorIcon className="icon-error" />
+              ) : (
+                username && <CheckCircleIcon className="icon-success" />
+              )}
             </div>
+            {usernameExistsError && <div className="error-message" style={{ color: 'red' }} mb={5}>{usernameExistsError}</div>}
+            <label>Email</label>
+            <div className="input-with-icon">
+              <input
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                className={emailError || emailExistsError ? 'input-error' : 'input-success'}
+              />
+              {emailError || emailExistsError ? (
+                <ErrorIcon className="icon-error" />
+              ) : (
+                email && <CheckCircleIcon className="icon-success" />
+              )}
+            </div>
+            {emailExistsError && <div className="error-message" style={{ color: 'red' }} mb={5}>{emailExistsError}</div>}
+
             <label>Phone</label>
             <div className="input-with-icon">
               <input

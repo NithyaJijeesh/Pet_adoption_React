@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function DonationFunction() {
+    
     const [errorMessage, setErrorMessage] = useState('');
     const [petName, setPetName] = useState('');
     const [category, setCategory] = useState('');
@@ -38,11 +39,11 @@ function DonationFunction() {
                 console.error('Error fetching categories:', error);
                 setErrorMessage('Error fetching categories');
             });
-    }, []);
+    // }, []);
 
-    useEffect(() => {
+    // useEffect(() => {
         if (category) {
-            AxiosInstance.get(`breeds/?category_id=${category}`)
+            AxiosInstance.get(`donationbreed/?category_id=${category}`)
                 .then(response => {
                     setBreeds(response.data);
                 })
@@ -55,11 +56,14 @@ function DonationFunction() {
 
     function handleMainImageChange(e) {
         const file = e.target.files[0];
+        console.log('Main Image:', file); //
         setMainImage(file ? file : null);
     }
 
     function handleAdditionalImagesChange(e) {
         const files = Array.from(e.target.files);
+        console.log('Additional Images:', files); // Log the file list
+
         setAdditionalImages(files);
     }
 
@@ -67,8 +71,8 @@ function DonationFunction() {
         const formData = new FormData();
         // console.log(breed)
         formData.append('name', petName || '');
-        formData.append('category', category || '');
-        formData.append('breed', breed || '');
+        formData.append('category_id', category || '');
+        formData.append('breed_id', breed);
         formData.append('description', description || '');
         formData.append('status', 'pending');
         formData.append('purchase_status', 'not_purchased');
@@ -80,7 +84,6 @@ function DonationFunction() {
             formData.append(`additional_images`, image);
         });
 
-        console.log(formData)
 
         AxiosInstance.post('donations/', formData, {
             headers: {
@@ -90,7 +93,7 @@ function DonationFunction() {
         .then(response => {
             console.log('Donation successful:', response.data);
             toast.success("We've received your kind donation.");
-            // navigate('/donordashboard');
+            // navigate('/donationlist');
         })
         .catch(error => {
             console.error('Error during donation:', error);
@@ -143,10 +146,10 @@ function DonationFunction() {
                                     label="Select Breed"
                                     sx={{ textTransform: 'capitalize' }}
                                 >
-                                    <MenuItem value={'null'} sx={{ textTransform: 'capitalize' }}>None</MenuItem>
+                                    {/*<MenuItem value={''} sx={{ textTransform: 'capitalize' }}>None</MenuItem>*/}
                                     {breeds.map((breed) => (
                                         <MenuItem key={breed.id} value={breed.id} sx={{ textTransform: 'capitalize' }}>
-                                            {breed.name}
+                                            {breed.name ? breed.name : 'None'}
                                         </MenuItem>
                                     ))}
                                 </Select>

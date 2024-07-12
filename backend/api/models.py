@@ -52,11 +52,10 @@ class Category(models.Model):
         return self.name
 
 class Breed(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, null=True, blank=True)
     category = models.ForeignKey(Category, related_name='breeds', on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.name
+
     
 class Donation(models.Model):
 

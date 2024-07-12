@@ -21,6 +21,10 @@ import DonationList from './components/Donor/DonationList';
 import PurchaseList from './components/Donor/PurchaseList'
 import Donation from './components/Donor/Donation';
 import Notifications from './components/Admin/Notifications';
+import UpdateDonation from './components/Donor/UpdateDonation';
+import CreateCategory from './components/Admin/CreateCategory';
+import CategoryList from './components/Admin/CategoryList';
+import UpdateCategory from './components/Admin/UpdateCategory';
 
 function App() {
   return (
@@ -38,12 +42,16 @@ function App() {
             <Route path="/buyerdetails" element={<BuyerDetails />} />
             <Route path='/pets' element={ <Pets /> }></Route>
             <Route path='/category' element={ <Category /> }></Route>
+            <Route path='/addcategory' element={ <CreateCategory /> }></Route>
+            <Route path='/listcategory' element={ <CategoryList /> }></Route>
+            <Route path='/updatecategory/:id' element={ <UpdateCategory /> }></Route>
             <Route path='/purchase' element={ <Purchase /> }></Route>
             <Route path='/adminnotifications' element={ <Notifications /> }></Route>
           </Route>
           <Route element={ <DonorRoute />}>
             <Route path='/donordashboard' element={ <Donor /> }></Route>
             <Route path='/donations' element={ <Donation /> }></Route>
+            <Route path='/updatedonation/:id' element={ <UpdateDonation /> }></Route>
             <Route path='/donorprofile' element={ <DonorProfile /> }></Route>
             <Route path='/donationlist' element={ <DonationList /> }></Route>
             <Route path='/purchaselist' element={ <PurchaseList /> }></Route>

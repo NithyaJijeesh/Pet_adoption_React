@@ -6,6 +6,7 @@ const token = Cookies.get('accessToken');
 
 const AxiosInstance = axios.create({
   baseURL: baseUrl,
+  withCredentials: true,
   // timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
@@ -14,7 +15,7 @@ const AxiosInstance = axios.create({
   }
 });
 
-// Request interceptor to log headers
+
 AxiosInstance.interceptors.request.use(config => {
   const token = Cookies.get('accessToken');
     if (token) {
@@ -25,11 +26,12 @@ AxiosInstance.interceptors.request.use(config => {
     return Promise.reject(error);
 });
 
+
 AxiosInstance.interceptors.response.use(
   response => response,
   error => {
     if (error.response && error.response.status === 401) {
-      // Cookies.remove('accessToken');
+      Cookies.remove('accessToken');
       window.location.href = '/login'; 
     }
     return Promise.reject(error);

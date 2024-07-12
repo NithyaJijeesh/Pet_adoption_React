@@ -14,6 +14,9 @@ from rest_framework import status as http_status
 from .serializers import CustomTokenObtainPairSerializer
 from django.core.mail import send_mail
 import logging
+from rest_framework.exceptions import NotFound
+
+
 
 
 logger = logging.getLogger(__name__)
@@ -22,16 +25,39 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
         
 
-@api_view(['GET'])
-def home(request):
-     return Response({'name':'OK'})
+# @api_view(['GET'])
+# def home(request):
+#      return Response({'name':'OK'})
 
 
-# CustomUser = get_user_model()
+class CheckUserExistsView(APIView):
+    def get(self, request):
+        username = request.query_params.get('username', None)
+        email = request.query_params.get('email', None)
+        data = {'username_exists': False, 'email_exists': False}
 
+        if username and CustomUser.objects.filter(username=username).exists():
+            data['username_exists'] = True
+
+        if email and CustomUser.objects.filter(email=email).exists():
+            data['email_exists'] = True
+
+        return Response(data, status=http_status.HTTP_200_OK)
+    
 class UserRegisterView(APIView):
 
     def post(self, request):
+        username = request.data.get('username')
+        email = request.data.get('email')
+
+        print(username)
+
+        if CustomUser.objects.filter(username=username).exists():
+            print('yes')
+            return Response({'username': 'Username already exists'}, status=http_status.HTTP_400_BAD_REQUEST)
+        if CustomUser.objects.filter(email=email).exists():
+            return Response({'email': 'Email already exists'}, status=http_status.HTTP_400_BAD_REQUEST)
+
         serializer = UserSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -115,10 +141,11 @@ def loginuser(request):
 
     
 class AdminDashboardView(APIView):
+
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]
     def get(self, request):
-        print(f'User: {request.user}, Is Admin: {request.user.is_staff}')
+
         data = {
             'message': 'Welcome to the admin dashboard'
         }
@@ -175,9 +202,44 @@ class CategoryView(APIView):
     def post(self, request):
         serializer = CategorySerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=http_status.HTTP_201_CREATED)
+            category = serializer.save()
+            Breed.objects.create(name=None, category=category)
+            updated_serializer = CategorySerializer(category)
+            return Response(updated_serializer.data, status=http_status.HTTP_201_CREATED)
         return Response(serializer.errors, status=http_status.HTTP_400_BAD_REQUEST)
+    
+class CategoryDetailsView(APIView):
+
+    def get(self, request, pk):
+        category = Category.objects.get(pk=pk)
+        serializer = CategorySerializer(category)
+        return Response(serializer.data)
+    
+    def put(self, request, pk=None):
+        try:
+            category = Category.objects.get(pk=pk)
+        except Category.DoesNotExist:
+            return Response(status=http_status.HTTP_404_NOT_FOUND)
+        
+        breeds = Breed.objects.filter(category=category)
+        breeds.delete()
+        Breed.objects.create(name=None, category=category)
+        serializer = CategorySerializer(category, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=http_status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk=None):
+        try:
+            category = Category.objects.get(pk=pk)
+            breeds = Breed.objects.filter(category=category)
+            breeds.delete()
+        except Category.DoesNotExist:
+            return Response(status=http_status.HTTP_404_NOT_FOUND)
+        
+        category.delete()
+        return Response(status=http_status.HTTP_204_NO_CONTENT)
 
 class BreedView(APIView):
     permission_classes = [IsAuthenticated]
@@ -185,7 +247,9 @@ class BreedView(APIView):
     def get(self, request):
         category_id = request.query_params.get('category_id')
         if category_id:
-            breeds = Breed.objects.filter(category_id=category_id)
+            breeds = Breed.objects.filter(category_id=category_id, name__isnull=False)
+        else:
+            breeds = Breed.objects.filter(name__isnull=False)
         serializer = BreedSerializer(breeds, many=True)
         return Response(serializer.data)
 
@@ -194,35 +258,152 @@ class BreedView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=http_status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=http_status.HTTP_400_BAD_REQUEST)    
+        return Response(serializer.errors, status=http_status.HTTP_400_BAD_REQUEST)
     
-class DonationView(APIView):
+class DonationBreedView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         category_id = request.query_params.get('category_id')
         if category_id:
             breeds = Breed.objects.filter(category_id=category_id)
-        serializer = BreedSerializer(breeds)
+        else:
+            breeds = Breed.objects.all()
+        serializer = BreedSerializer(breeds, many=True)
         return Response(serializer.data)
 
+ 
+class DonationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return Donation.objects.get(pk=pk)
+        except Donation.DoesNotExist:
+            raise NotFound('Donation not found')
+
+    def get(self, request):
+        category_id = request.query_params.get('category_id')
+        donations = Donation.objects.all()
+        if category_id:
+            donations = donations.filter(category_id=category_id)
+        serializer = DonationSerializer(donations, many=True)
+        return Response(serializer.data)
 
     def post(self, request):
+
         user = request.user
         if not user.is_authenticated:
             return Response({'error': 'Authentication required'}, status=http_status.HTTP_401_UNAUTHORIZED)
-        print('Data: ', request.data)
+
+        main_image = request.FILES.get('main_image')
+        additional_images = request.FILES.getlist('additional_images')
+
         data = request.data.copy()
-        data['donor'] = user.id 
-        print(data)
-        print(DonationSerializer())
-        serializer = DonationSerializer(data=data)
+        serializer = DonationSerializer(data=data, context={'request': request})
+
         if serializer.is_valid():
-            serializer.save()
+
+            donation = serializer.save()
+            if main_image:
+                donation.image.save(main_image.name, main_image)
+
+            
+            for image in additional_images:
+                
+                AdditionalImage.objects.create(donation=donation, image=image)
             return Response(serializer.data, status=http_status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=http_status.HTTP_400_BAD_REQUEST)
+        
+
+class DonationDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return Donation.objects.get(pk=pk)
+        except Donation.DoesNotExist:
+            raise NotFound('Donation not found')
+
+    def get(self, request, pk):
+        donation = self.get_object(pk)
+        serializer = DonationSerializer(donation)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        donation = self.get_object(pk)
+        main_image = request.FILES.get('main_image')
+        additional_images = request.FILES.getlist('additional_images')
+        data = request.data.copy()
+        serializer = DonationSerializer(donation, data=data, context={'request': request}, partial=True)
+        print(data)
+        if serializer.is_valid():
+            donation = serializer.save()
+            if main_image:
+                donation.image.save(main_image.name, main_image)
+
+            a = AdditionalImage.objects.filter(donation=donation)
+            print(a)
+            a.delete()
+
+            for image in additional_images:
+                AdditionalImage.objects.create(donation=donation, image=image)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=http_status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        donation = self.get_object(pk)
+        donation.delete()
+        return Response(status=http_status.HTTP_204_NO_CONTENT)
+
+class DonorAdminView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            donor = CustomUser.objects.filter(user_type='donor')
+        except CustomUser.DoesNotExist:
+            return Response({'error': 'Donors not found'}, status=http_status.HTTP_404_NOT_FOUND)
+        
+        serializer = UserSerializer(donor, many=True)
+        return Response(serializer.data)
     
+    def delete(self, request, pk):
+        try:
+            donor = CustomUser.objects.get(id=pk, user_type='donor')
+            print(donor)
+            donor.delete()
+            return Response(status=http_status.HTTP_204_NO_CONTENT)
+        except Donation.DoesNotExist:
+            return Response({'error': 'Donor not found'}, status=http_status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=http_status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class BuyerAdminView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            buyer = CustomUser.objects.filter(user_type='buyer')
+        except CustomUser.DoesNotExist:
+            return Response({'error': 'Buyers not found'}, status=http_status.HTTP_404_NOT_FOUND)
+        
+        serializer = UserSerializer(buyer, many=True)
+        return Response(serializer.data)
+    
+    def delete(self, request, pk):
+        try:
+            buyer = CustomUser.objects.get(id=pk, user_type='buyer')
+            print(buyer)
+            buyer.delete()
+            return Response(status=http_status.HTTP_204_NO_CONTENT)
+        except Donation.DoesNotExist:
+            return Response({'error': 'Buyer not found'}, status=http_status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=http_status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 class DonationAdminView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -268,7 +449,7 @@ class DonationDonorView(APIView):
 
     def get(self, request):
         try:
-            data = Donation.objects.filter(donor = request.user.id, status = 'approved')
+            data = Donation.objects.filter(donor = request.user.id)
             serializer = DonationSerializer(data, many=True)
             return Response(serializer.data, status=http_status.HTTP_200_OK)
         except Exception as e:
