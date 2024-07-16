@@ -4,7 +4,7 @@ import CustomButton from '../Button/CustomButton';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import { Box, Select, InputLabel, FormControl, TextField, MenuItem, Button, styled } from '@mui/material';
 import AxiosInstance from '../axios';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,7 +19,7 @@ function DonationFunction() {
     const [additionalImages, setAdditionalImages] = useState([]);
     const [categories, setCategories] = useState([]);
     const [breeds, setBreeds] = useState([]);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const CustomOutlinedButton = styled(Button)(({ theme }) => ({
         borderColor: '#1b2b5d',
@@ -39,9 +39,8 @@ function DonationFunction() {
                 console.error('Error fetching categories:', error);
                 setErrorMessage('Error fetching categories');
             });
-    // }, []);
-
-    // useEffect(() => {
+        
+            console.log(category)
         if (category) {
             AxiosInstance.get(`donationbreed/?category_id=${category}`)
                 .then(response => {
@@ -93,7 +92,12 @@ function DonationFunction() {
         .then(response => {
             console.log('Donation successful:', response.data);
             toast.success("We've received your kind donation.");
-            // navigate('/donationlist');
+            setPetName('');
+            setCategory('');
+            setBreed('');
+            setDescription('');
+            setMainImage(null);
+            setAdditionalImages([]);
         })
         .catch(error => {
             console.error('Error during donation:', error);

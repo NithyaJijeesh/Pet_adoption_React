@@ -179,7 +179,7 @@ const NavBar = () => {
                 key={page}
                 onClick={handleCloseNavMenu}
                 href={pagesMap[page]}
-                sx={{ my: 2,  display: 'block'}}
+                sx={{ my: 2,  display: 'block',gap : 5, justifyContent:'space-evenly'}}
               >
                 {page}
               </Button>

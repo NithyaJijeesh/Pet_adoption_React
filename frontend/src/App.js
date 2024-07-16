@@ -25,6 +25,10 @@ import UpdateDonation from './components/Donor/UpdateDonation';
 import CreateCategory from './components/Admin/CreateCategory';
 import CategoryList from './components/Admin/CategoryList';
 import UpdateCategory from './components/Admin/UpdateCategory';
+import BuyerProfile from './components/User/BuyerProfile';
+import BuyerPassword from './components/User/BuyerPassword';
+import DonorNotification from './components/Donor/DonorNotification';
+import AdminProfile from './components/Admin/AdminProfile';
 
 function App() {
   return (
@@ -47,6 +51,8 @@ function App() {
             <Route path='/updatecategory/:id' element={ <UpdateCategory /> }></Route>
             <Route path='/purchase' element={ <Purchase /> }></Route>
             <Route path='/adminnotifications' element={ <Notifications /> }></Route>
+            <Route path='/adminprofile' element={ <AdminProfile /> }></Route>
+
           </Route>
           <Route element={ <DonorRoute />}>
             <Route path='/donordashboard' element={ <Donor /> }></Route>
@@ -55,9 +61,13 @@ function App() {
             <Route path='/donorprofile' element={ <DonorProfile /> }></Route>
             <Route path='/donationlist' element={ <DonationList /> }></Route>
             <Route path='/purchaselist' element={ <PurchaseList /> }></Route>
+            <Route path='donornotification' element={ <DonorNotification /> }></Route>
+
           </Route>
           <Route element={ <BuyerRoute />}>
             <Route path='/buyerdashboard' element={ <Buyer /> }></Route>
+            <Route path='/buyerprofile' element={ <BuyerProfile /> }></Route>
+            <Route path='/buyercategory' element={ <BuyerPassword /> }></Route>
           </Route>
         </Routes>
       </BrowserRouter>

@@ -92,7 +92,7 @@ function Home() {
             <ClickableCard title="BIRDS" image={birdImage} alt="Birds Image" />
           </Grid>
           <Grid item xs={12} sm={6} md={3} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0.9rem' }}>
-            <ClickableCard title="OTHER ANIMALS" image={pawImage} alt="Other Animals Image" />
+            <ClickableCard title="OTHERS" image={pawImage} alt="Other Animals Image" />
           </Grid>
         </Grid>
 

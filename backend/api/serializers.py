@@ -64,6 +64,7 @@ class AdditionalImageSerializer(serializers.ModelSerializer):
 
 class DonationSerializer(serializers.ModelSerializer):
     donor = UserSerializer(read_only=True)
+    buyer = UserSerializer(read_only=True)
     category = CategorySerializer(read_only=True)
     breed = BreedSerializer(read_only=True)
 

@@ -191,7 +191,7 @@ const DonorNav = (props) => {
               transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={() => navigate('/donorprofile')}>
                 <ListItemIcon sx={{ color: '#1b2b5d' }}>
                   <AccountCircleIcon fontSize="small" />
                 </ListItemIcon>
@@ -282,7 +282,7 @@ const DonorNav = (props) => {
                 />
               </ListItemButton>
             </ListItem>
-             {/* <ListItem>
+             <ListItem>
               <ListItemButton component={Link} to="/purchaselist">
                 <ListItemIcon sx={{ marginLeft: 3, color: 'seashell' }}>
                     <StoreIcon />
@@ -295,17 +295,22 @@ const DonorNav = (props) => {
                   }} 
                 />
               </ListItemButton>
-            </ListItem> */}
+            </ListItem>
           </List>
           <Divider />
           <List>
-
-            <ListItem key='Notification' >
-              <ListItemButton>
+            <ListItem>
+              <ListItemButton component={Link} to="/donornotification">
                 <ListItemIcon sx={{ marginLeft: 3, color: 'seashell' }}>
                   <NotificationsActiveIcon /> 
                 </ListItemIcon>
-                <ListItemText primary='NOTIFICATIONS' sx={{ textTransform: 'uppercase', fontWeight: 900 }}  />
+                <ListItemText 
+                  primary='Notifications' 
+                  sx={{ 
+                    textTransform: 'uppercase', 
+                    fontWeight: 900, 
+                  }} 
+                />
               </ListItemButton>
             </ListItem>
 

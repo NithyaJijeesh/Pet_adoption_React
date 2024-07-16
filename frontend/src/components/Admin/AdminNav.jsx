@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,9 +10,8 @@ import MenuItem from '@mui/material/MenuItem';
 import '../components.css';
 import pawLogo from '../../assets/logo2.png';
 import { useNavigate, Link } from 'react-router-dom';
-import { Avatar, CssBaseline, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip } from '@mui/material';
-import Settings from '@mui/icons-material/Settings';
-import Logout from '@mui/icons-material/Logout';
+import { Avatar, CssBaseline, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField } from '@mui/material';
+ import Logout from '@mui/icons-material/Logout';
 import Cookies from "js-cookie";
 import LogoutIcon from '@mui/icons-material/Logout';
 import StoreIcon from '@mui/icons-material/Store';
@@ -21,15 +20,24 @@ import PetsIcon from '@mui/icons-material/Pets';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import KeyIcon from '@mui/icons-material/Key';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AxiosInstance from '../axios';
+import PasswordChangeModal from '../Modal/PasswordChangeModal';
 
 const drawerWidth = 300;
 
 const AdminNav = (props) => {
   const { content } = props;
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  // const isMobile = useMediaQuery('(max-width:600px)');
+  const [profileImage, setProfileImage] = useState(null);
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -42,6 +50,19 @@ const AdminNav = (props) => {
   useEffect(() => {
     document.body.classList.add('home-background');
 
+    AxiosInstance.get('admindashboard/')
+      .then(response => {
+        const data = response.data;
+        const relativeImagePath = data.image;
+        if (relativeImagePath.startsWith('/media/')) {
+          const imageUrl = `${AxiosInstance.defaults.baseURL}${relativeImagePath}`;
+          setProfileImage(imageUrl);
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
     return () => {
       document.body.classList.remove('home-background');
     };
@@ -50,6 +71,37 @@ const AdminNav = (props) => {
   const handleLogout = () => {
     Cookies.remove('accessToken');
     navigate('/');
+  };
+
+  const handlePasswordModalOpen = () => {
+    setPasswordModalOpen(true);
+  };
+
+  const handlePasswordModalClose = () => {
+    setPasswordModalOpen(false);
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+    setPasswordError('');
+  };
+
+  const handlePasswordChange = () => {
+    if (newPassword !== confirmPassword) {
+      setPasswordError('Passwords do not match');
+      return;
+    }
+
+    AxiosInstance.put('change-password/', {
+      current_password: currentPassword,
+      new_password: newPassword,
+    })
+      .then(response => {
+        handlePasswordModalClose();
+      })
+      .catch(error => {
+        console.error(error);
+        setPasswordError('An error occurred while changing the password');
+      });
   };
 
   return (
@@ -130,7 +182,11 @@ const AdminNav = (props) => {
                   aria-haspopup="true"
                   aria-expanded={open ? 'true' : undefined}
                 >
-                  <Avatar sx={{ width: 50, height: 50, backgroundColor:'#1b2b5d' }}>A</Avatar>
+                  {profileImage ? (
+                    <Avatar sx={{ width: 50, height: 50 }} src={profileImage} />
+                  ) : (
+                    <Avatar sx={{ width: 50, height: 50, backgroundColor:'#1b2b5d' }}>A</Avatar>
+                  )}
                 </IconButton>
               </Tooltip>
             </Box>
@@ -169,16 +225,19 @@ const AdminNav = (props) => {
               transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-              <MenuItem onClick={handleClose}>
-                <Avatar sx={{ backgroundColor: '#1b2b5d' }}/> Profile
+              <MenuItem onClick={() => navigate('/adminprofile')}>
+                <ListItemIcon sx={{ color: '#1b2b5d' }}>
+                  <AccountCircleIcon fontSize="small" />
+                </ListItemIcon>
+                Profile
+              </MenuItem>
+              <MenuItem onClick={handlePasswordModalOpen}>
+                <ListItemIcon sx={{ color: '#1b2b5d' }}>
+                  <KeyIcon fontSize="small" />
+                </ListItemIcon>
+                Change Password
               </MenuItem>
               <Divider />
-              <MenuItem onClick={handleClose}>
-                <ListItemIcon sx={{ color: '#1b2b5d' }}>
-                  <Settings fontSize="small" />
-                </ListItemIcon>
-                Settings
-              </MenuItem>
               <MenuItem onClick={handleLogout}>
                 <ListItemIcon sx={{ color: '#1b2b5d' }}>
                   <Logout fontSize="small" />
@@ -253,7 +312,6 @@ const AdminNav = (props) => {
               <ListItemButton component={Link} to="/category">
                 <ListItemIcon sx={{ marginLeft: 3, color: 'seashell' }}>
                   <CategoryIcon />
-                  
                 </ListItemIcon>
                 <ListItemText 
                   primary='Category' 
@@ -314,6 +372,8 @@ const AdminNav = (props) => {
         <Toolbar />
         {content}
       </Box>
+
+      <PasswordChangeModal open={passwordModalOpen} handleClose={handlePasswordModalClose} />
     </Box>
   );
 };

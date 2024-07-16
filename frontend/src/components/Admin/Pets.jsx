@@ -1,136 +1,124 @@
-import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-// import TablePagination from '@mui/material/TablePagination';s
-import TableRow from '@mui/material/TableRow';
+import React, { useEffect, useState } from 'react';
 import AdminNav from './AdminNav';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Avatar} from '@mui/material';
+import AxiosInstance from '../axios';
+import { Container } from 'react-bootstrap';
+import defaultImage from '../../assets/default_pet_image.jpeg';
+import CustomButton from '../Button/CustomButton';
+import { toast, ToastContainer } from 'react-toastify';
 
-const columns = [
-  { id: 'name', label: 'Name', minWidth: 150 },
-  { id: 'code', label: 'Category', minWidth: 100 },
-  {
-    id: 'population',
-    label: 'Breed/ Family',
-    minWidth: 100,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'size',
-    label: 'Donor',
-    minWidth: 100,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'density',
-    label: 'Action',
-    minWidth: 100,
-    align: 'right',
-    format: (value) => value.toFixed(2),
-  },
-];
 
-function createData(name, email, phone, address, user, action) {
-//   const density = population / size;
-  return { name, email, phone, address, user, action };
-}
+const PetsFunction = () =>{
+  // const [s, setDonors] = useState([])
+  const [donations, setDonations] = useState([]);
+  const [selectedDonation, setSelectedDonation] = useState(null);
 
-const rows = [
-  createData('India', 'IN', 1324171354, 3287263, 'donor'),
-  createData('China', 'CN', 1403500365, 9596961, 'buyer'),
-  createData('Italy', 'IT', 60483973, 301340, 'buyer'),
-  createData('United States', 'US', 327167434, 9833520, 'buyer'),
-  createData('Canada', 'CA', 37602103, 9984670, 'donor'),
-  createData('Canada', 'CA', 37602103, 9984670, 'donor'),
-  createData('Australia', 'AU', 25475400, 7692024, 'buyer'),
-  createData('Germany', 'DE', 83019200, 357578, 'buyer'),
-  createData('Ireland', 'IE', 4857000, 70273, 'buyer'),
-  createData('Mexico', 'MX', 126577691, 1972550, 'buyer'),
-  createData('Japan', 'JP', 126317000, 377973, 'buyer'),
-  createData('France', 'FR', 67022000, 640679, 'donor'),
-  createData('United Kingdom', 'GB', 67545757, 242495, 'buyer'),
-  createData('Russia', 'RU', 146793744, 17098246, 'donor'),
-  createData('Nigeria', 'NG', 200962417, 923768, 'buyer'),
-  createData('Brazil', 'BR', 210147125, 8515767, 'buyer'),
-  createData('United States', 'US', 327167434, 9833520, 'buyer'),
+  const handleDelete = () => {
+    if (selectedDonation) {
+      console.log('clicked');
+
+      AxiosInstance.delete(`approveddonations/${selectedDonation.id}/`)
+        .then(() => {
+          console.log('yes')
+          toast.success('Donation entry deletion completed!');
+          fetchDonations();
+        })
+        .catch(error => {
+          console.error(error);
+          toast.error('Failed to delete donation');
+        });
+    }
+  };
+  useEffect(() => {
+    fetchDonations();
+  }, []);
+
+  const fetchDonations = () => {
+    AxiosInstance.get('approveddonations/')
+      .then(response => {
+        const petsDetails = response.data.map(donors => {
+          const relativeImagePath = donors.image || defaultImage;
+          const imageUrl = relativeImagePath.startsWith('/media/') ? `${AxiosInstance.defaults.baseURL}${relativeImagePath}` : defaultImage;
+          return {
+            ...donors,
+            imageUrl: imageUrl
+          };
+        });
+        setDonations(petsDetails);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const handleDeleteClick = (donation) => {
+    setSelectedDonation(donation);
+    handleDelete();
+  };
  
-];
-
-export default function Pets() {
-//   const [page, setPage] = React.useState(0);
-//   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-//   const handleChangePage = (event, newPage) => {
-//     setPage(newPage);
-//   };
-
-//   const handleChangeRowsPerPage = (event) => {
-//     setRowsPerPage(+event.target.value);
-//     setPage(0);
-//   };
-
-  const content = (
-    <Paper py={5} sx={{ width: '100%', overflow: 'hidden', borderRadius: '10px', backgroundColor:'#F0F4F8' }}>
-        <h2 sx={{ fontFamily : 'cursive', color: '#1b2b5d'}}>Pet Details</h2>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidt, backgroundColor:'#1b2b5d', color: 'seashell' }}
+  return(
+    <Container 
+        className="vh-90 align-items-center justify-content-center px-2 py-0 text-center custom-scrollbar category-form mt-0" 
+        style={{ backgroundColor: '#F0F4F8' }}
+    >
+      <h2>Pets Information</h2>
+        <TableContainer component={Paper} mt={5} px={4} py={1}>
+          <Table sx={{ minWidth: '100%' }} aria-label="simple table">
+            <TableHead>
+              <TableRow sx={{ backgroundColor: '#1b2b5d'}}>
+                <TableCell sx={{ color: 'seashell', fontWeight: 'bold' }}>PET NAME</TableCell>
+                <TableCell align="center" sx={{ color: 'seashell', fontWeight: 'bold' }}>CATEGORY</TableCell>
+                <TableCell align="center" sx={{ color: 'seashell', fontWeight: 'bold' }}>BREED</TableCell>
+                <TableCell align="right" sx={{ color: 'seashell', fontWeight: 'bold' }}>DESCRIPTION</TableCell>
+                <TableCell align="center" sx={{ color: 'seashell', fontWeight: 'bold' }}>DONOR</TableCell>
+                <TableCell align="left" sx={{ color: 'seashell', fontWeight: 'bold' }}>ACTION</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {donations.map((donation, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    '&:nth-of-type(odd)': { backgroundColor: '#F0F4F8' },
+                    '&:last-child td, &:last-child th': { border: 0 }
+                  }}
                 >
-                  {column.label}
-                </TableCell>
+                  <TableCell component="th" scope="row" style={{ textTransform: 'capitalize',fontWeight: 'bold' }}>
+                    {donation.name}
+                  </TableCell>
+                  <TableCell align="center" style={{ textTransform: 'uppercase',fontWeight: 'bold' }}>
+                    {donation.category ? `${donation.category.name}` : ''}
+                  </TableCell>
+                  <TableCell align="center" style={{ textTransform: 'capitalize',fontWeight: 'bold' }}>
+                    {donation.breed ? `${donation.breed.name}` : ''}
+                  </TableCell>
+                  <TableCell align="right" style={{  fontWeight: 'bold' }}>
+                    {donation.description ? `${donation.description}` : ''}
+                  </TableCell>
+                  {/* <TableCell align="right" style={{ textTransform: 'capitalize',fontWeight: 'bold' }}>
+                    <Avatar src={donation.imageUrl} sx={{ width: 50, height: 50, backgroundColor: '#1b2b5d' }} />
+                  </TableCell> */}
+                  <TableCell align="center" style={{ textTransform: 'capitalize',fontWeight: 'bold' }}>
+                    {donation.donor ? `${donation.donor.first_name} ${donation.donor.last_name}` : 'Unknown'} 
+                  </TableCell>
+                  <TableCell align="right" style={{ textTransform: 'capitalize',fontWeight: 'bold'}}>
+                    <CustomButton type="button" text="Delete" onClick = {() => handleDeleteClick(donation)} sx={{ width: '80px' }} />
+                  </TableCell>
+                </TableRow>
               ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows
-            //   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                        
-                      );
-                    //   <MoreVertIcon />
-                    })}
-                    
-                  </TableRow>
-
-                
-                );
-                
-              })}
-              {/* <TableRow hover role="checkbox" tabIndex={-1} >
-                <TableCell >
-                        <MoreVertIcon />
-                </TableCell>
-            </TableRow> */}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-    </Paper>
+              
+            </TableBody>
+          </Table>
+        </TableContainer>
+      {/* </Box> */}
+    </Container>
   )
-
-  return (
-        <AdminNav  content={content}/>
-    );   
 }
+
+function Pets() {
+  return (
+    <AdminNav content = {<PetsFunction />} />
+  )
+}
+
+export default Pets

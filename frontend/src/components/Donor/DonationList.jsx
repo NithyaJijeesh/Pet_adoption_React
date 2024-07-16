@@ -39,7 +39,7 @@ function Approved() {
 
   const handleDelete = () => {
     if (selectedDonation) {
-      AxiosInstance.delete(`donations/${selectedDonation.id}/`)
+      AxiosInstance.delete(`donationdetails/${selectedDonation.id}/`)
         .then(() => {
           toast.success('Donation deleted successfully');
           fetchDonations();
@@ -57,7 +57,7 @@ function Approved() {
   }, []);
 
   const fetchDonations = () => {
-    AxiosInstance.get('approveddonations/')
+    AxiosInstance.get('alldonations/')
       .then(response => {
         const processedDonations = response.data.map(donation => {
           const relativeImagePath = donation.image || defaultProfileImage;
@@ -115,7 +115,7 @@ function Approved() {
                     {donation.category ? `${donation.category.name}` : ''}
                   </TableCell>
                   <TableCell align="center" style={{ textTransform: 'capitalize', fontWeight: 'bold' }}>
-                    {donation.breed ? `${donation.breed.name}` : ''}
+                    {donation.breed?.name || ''}                  
                   </TableCell>
                   <TableCell align="right" style={{ fontWeight: 'bold' }}>
                     {donation.description ? `${donation.description}` : ''}

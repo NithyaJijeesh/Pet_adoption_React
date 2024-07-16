@@ -46,7 +46,7 @@ function DonationUpdate() {
     // Fetch breeds when category changes
     useEffect(() => {
         if (category) {
-            AxiosInstance.get(`breeds/?category_id=${category}`)
+            AxiosInstance.get(`donationbreed/?category_id=${category}`)
                 .then(response => {
                     setBreeds(response.data);
                 })
@@ -60,7 +60,7 @@ function DonationUpdate() {
     // Fetch donation details when ID changes
     useEffect(() => {
         if (id) {
-            AxiosInstance.get(`donations/${id}/`)
+            AxiosInstance.get(`donationdetails/${id}/`)
                 .then(response => {
                     const donation = response.data;
                     setPetName(donation.name);
@@ -105,7 +105,7 @@ function DonationUpdate() {
             formData.append('additional_images', image); // Note: ensure your backend expects 'additional_images'
         });
 
-        AxiosInstance.put(`donations/${id}/`, formData, {
+        AxiosInstance.put(`donationdetails/${id}/`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },

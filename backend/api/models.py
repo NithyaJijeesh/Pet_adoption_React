@@ -69,7 +69,8 @@ class Donation(models.Model):
         ('not_purchased', 'Not Purchased'),
     ]
 
-    donor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    donor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name='donor_donations')
+    buyer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name='buyer_donations')
     name = models.CharField(max_length=100, null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
     breed = models.ForeignKey(Breed, on_delete=models.CASCADE, null=True, blank=True)
@@ -77,6 +78,7 @@ class Donation(models.Model):
     image = models.ImageField(upload_to='images/donated/', null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     purchase_status = models.CharField(max_length=15, choices=PURCHASE_STATUS_CHOICES, default='not_purchased')
+    purchased_date = models.DateTimeField(null=True, blank=True)
 
 class AdditionalImage(models.Model):
     donation = models.ForeignKey(Donation, related_name='additional_images', on_delete=models.CASCADE)
